@@ -22,6 +22,9 @@ void blinkLeds(int first,int second,int third,int fourth);
 void setupMotors();
 bool engineManager(int engineStatus);
 void movementManager(int isMoving, String value, int speed);
+void directionManager(int isTurning, String value, int speed);
+void autoMove();
+
 
 struct ParsedData {
     bool engine;
@@ -79,6 +82,7 @@ void loop() {
         connectMQTT();
     }
     client.loop();
+    // autoMove();
 }
 
 
@@ -147,6 +151,7 @@ void receiveData(String value){
 
     // Checks for movements
     movementManager(data.isMoving, data.moveValue, data.speed);
+    directionManager(data.isTurning, data.directionValue, data.speed);
    //  Serial.print("Is Moving: ");
    //  Serial.println(data.isMoving);
    //  Serial.print("Move Value: ");
@@ -178,7 +183,32 @@ void movementManager(int isMoving, String value, int speed) {
 
     if (value.charAt(0) == 'w') {
             moveRobot(Move::FORWARD, speed);
+    }
+    else if (value.charAt(0) == 's') {
+            moveRobot(Move::BACKWARD, speed);
     };
+}
+
+
+void directionManager(int isTurning, String value, int speed) {
+    if (isTurning == 0) {
+        return;
+    };
+
+    if (value.charAt(0) == 'd') {
+        direction(Direction::RIGHT, speed);
+    }
+    else if (value.charAt(0) == 'a') {
+        direction(Direction::LEFT, speed);
+    };
+}
+
+
+void autoMove() {
+    moveRobot(Move::FORWARD, 170);
+    delay(2000);
+    moveRobot(Move::BACKWARD, 170);
+    delay(2000);
 }
 
 

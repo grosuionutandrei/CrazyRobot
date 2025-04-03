@@ -11,7 +11,7 @@ enum Move {
     BACKWARD
 };
 
-enum class Direction {
+enum Direction {
     RIGHT,
     LEFT
 };
