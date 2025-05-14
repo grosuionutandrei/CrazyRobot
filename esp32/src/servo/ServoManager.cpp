@@ -1,64 +1,69 @@
 #include "ServoManager.h"
 
 
-ServoManager::ServoManager() : initialized(false) {
-    for (int i = 0; i < SERVO_COUNT; i++) {
-        ServoID id = static_cast<ServoID>(i);
-        const ServoConfig& config = SERVO_CONFIGS[i];
+ServoManager::ServoManager() : pwm(), initialized(false)  {
 
-        servos[i] = new ServoMotor(
-            id,
-            config.pin,
-            config.initialAngle,
-            config.minAngle,
-            config.maxAngle
-        );
-    }
-}
-
-
-ServoManager::~ServoManager() {
-    for (int i = 0; i < SERVO_COUNT; i++) {
-        if (servos[i] != nullptr) {
-            delete servos[i];
-            servos[i] = nullptr;
-        }
-    }
-}
+};
 
 
 bool ServoManager::setup() {
-    bool allInitialized = true;
-
-    for (int i=0; i < servoCount; i++) {
-        if (servos[i] != nullptr) {
-           if (servos[i]->init()) {
-                Serial.printf("Failed to initialize servo: %s\n", i);
-                allInitialized = false;
-            }
-        }
-    }
-
-    initialized = allInitialized;
+    pwm.begin();
+    pwm.setPWMFreq(SERVO_FREQ);
+    initialized = true;
     return initialized;
-}
+};
 
 
-bool ServoManager::move(ServoID id, int angle) {
-    ServoMotor* servo = getServo(id);
+void ServoManager::setServoAngle(uint8_t channel, int angle) {
+    angle = constrain(angle, 0, 180);
+    int pulse = map(angle, 0, 180, SERVO_MIN, SERVO_MAX);
+    pwm.setPWM(channel, 0, pulse);
+};
 
-    if (servo) {
-        return servo->moveTo(angle);
+
+void ServoManager::moveServo(ServoID id, int angle) {
+    setServoAngle(static_cast<uint8_t>(id), angle);
+};
+
+
+void ServoManager::moveServo(ServoID id, Position position) {
+    switch (id) {
+        case NECK:
+            neckMovements(position);
+            break;
+
+        default:
+            // Optional: log or ignore
+            break;
     }
-
-    return false;
-}
+};
 
 
-ServoMotor* ServoManager::getServo(ServoID id) {
-    if (id >= 0 && id < SERVO_COUNT) {
-        return servos[id];
-    }
+/**
+ * Neck Movements Diagram
+ *
+ *   .------R1-----.-------R2------.
+ *   |             |               |
+ *   L             C               R
+ *  180           105              0
+ */
+void ServoManager::neckMovements(Position position) {
+    switch (position) {
 
-    return nullptr;
-}
+        case LEFT:
+            setServoAngle(SERVO_CONFIGS[NECK].channel, 180);
+            break;
+
+        case CENTER:
+            setServoAngle(SERVO_CONFIGS[NECK].channel, 105);
+            break;
+
+        case RIGHT:
+            setServoAngle(SERVO_CONFIGS[NECK].channel, 0);
+            break;
+
+        default:
+            setServoAngle(SERVO_CONFIGS[NECK].channel, 105);
+            break;
+    };
+};
