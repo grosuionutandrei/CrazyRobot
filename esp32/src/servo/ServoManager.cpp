@@ -28,8 +28,16 @@ void ServoManager::moveServo(ServoID id, int angle) {
 
 void ServoManager::moveServo(ServoID id, Position position) {
     switch (id) {
-        case NECK:
-            neckMovements(position);
+        case HEAD:
+            headMoves(position);
+            break;
+
+        case NECKT:
+            neckTMoves(position);
+            break;
+
+        case NECKB:
+            neckBMoves(position);
             break;
 
         default:
@@ -40,30 +48,108 @@ void ServoManager::moveServo(ServoID id, Position position) {
 
 
 /**
- * Neck Movements Diagram
+ * Head Movements Diagram
+ *
+ *   .------R1-----.-------R2------.
+ *   |             |               |
+ *   L             C               R
+ *  180            95              0
+ */
+void ServoManager::headMoves(Position position) {
+    switch (position) {
+
+        case LEFT:
+            setServoAngle(SERVO_CONFIGS[HEAD].channel, 180);
+            break;
+
+        case CENTER:
+            setServoAngle(SERVO_CONFIGS[HEAD].channel, 95);
+            break;
+
+        case RIGHT:
+            setServoAngle(SERVO_CONFIGS[HEAD].channel, 0);
+            break;
+
+        default:
+            setServoAngle(SERVO_CONFIGS[HEAD].channel, 95);
+            break;
+    };
+};
+
+
+/**
+ * Neck Top Movements Diagram
  *
  *   .------R1-----.-------R2------.
  *   |             |               |
  *   L             C               R
  *  180           105              0
  */
-void ServoManager::neckMovements(Position position) {
+void ServoManager::neckTMoves(Position position) {
     switch (position) {
 
-        case LEFT:
-            setServoAngle(SERVO_CONFIGS[NECK].channel, 180);
+        case UP:
+            setServoAngle(SERVO_CONFIGS[NECKT].channel, 180);
             break;
 
-        case CENTER:
-            setServoAngle(SERVO_CONFIGS[NECK].channel, 105);
-            break;
-
-        case RIGHT:
-            setServoAngle(SERVO_CONFIGS[NECK].channel, 0);
+        case DOWN:
+            setServoAngle(SERVO_CONFIGS[NECKT].channel, 0);
             break;
 
         default:
-            setServoAngle(SERVO_CONFIGS[NECK].channel, 105);
+            setServoAngle(SERVO_CONFIGS[NECKT].channel, 0);
+            break;
+    };
+};
+
+
+/**
+ * Neck Bottom Movements Diagram
+ *
+ *   .------R1-----.-------R2------.
+ *   |             |               |
+ *   L             C               R
+ *  180           105              0
+ */
+void ServoManager::neckBMoves(Position position) {
+    switch (position) {
+
+        case UP:
+            setServoAngle(SERVO_CONFIGS[NECKB].channel, 180);
+            break;
+
+        case DOWN:
+            setServoAngle(SERVO_CONFIGS[NECKB].channel, 0);
+            break;
+
+        default:
+            setServoAngle(SERVO_CONFIGS[NECKB].channel, 0);
+            break;
+    };
+};
+
+
+/**
+ * Left Eye Diagram
+ *
+ *   .------R1-----.-------R2------.
+ *   |             |               |
+ *   L             C               R
+ *  180           105              0
+ */
+void ServoManager::leftEyeMoves(Position position) {
+    switch (position) {
+
+        case UP:
+            setServoAngle(SERVO_CONFIGS[LEYE].channel, 70);
+            break;
+
+        case DOWN:
+            setServoAngle(SERVO_CONFIGS[LEYE].channel, 0);
+            break;
+
+        default:
+            setServoAngle(SERVO_CONFIGS[LEYE].channel, 0);
             break;
     };
 };

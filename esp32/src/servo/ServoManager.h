@@ -7,7 +7,10 @@ private:
     Adafruit_PWMServoDriver pwm;
     bool initialized;
 
-    void neckMovements(Position position);
+    void headMoves(Position position);
+    void neckTMoves(Position position);
+    void neckBMoves(Position position);
+    void leftEyeMoves(Position position);
 public:
     ServoManager();
 
