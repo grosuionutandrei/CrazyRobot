@@ -53,6 +53,15 @@ export interface ServerUnsubscribedClientFromRobotTopicDto extends BaseDto {
     unsubscribed:boolean
 }
 
+// Disconnects client when logout
+export interface ClientIsDisconnectedDto extends BaseDto{
+    clientId:string
+}
+//server response for the client disconnecting when logout
+export interface ServerDisconnectsClientDto extends BaseDto {
+    unsubscribed:boolean
+}
+
 //subscribe client when user enter the robot page
 export interface ClientSubscribeToRobotTopicDto extends BaseDto {
     clientId:string
@@ -86,5 +95,7 @@ export enum StringConstants {
     ClientSubscribeToRobotTopicDto = "ClientSubscribeToRobotTopicDto",
     ServerSubscribedClientToRobotTopicDto="ServerSubscribedClientToRobotTopicDto",
     ClientUnsubscribeFromRobotTopicDto ="ClientUnsubscribeFromRobotTopicDto",
-    ServerUnsubscribedClientFromRobotTopicDto = "ServerUnsubscribedClientFromRobotTopicDto"
+    ServerUnsubscribedClientFromRobotTopicDto = "ServerUnsubscribedClientFromRobotTopicDto",
+    ClientIsDisconnectedDto = "ClientIsDisconnectedDto"
+
 }

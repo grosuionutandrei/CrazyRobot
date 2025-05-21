@@ -67,7 +67,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setJwt(token);
     }
 
-    function logout() {
+    async function logout() {
+
         localStorage.removeItem('jwt');
         setJwt(null);
         http.resetClients();

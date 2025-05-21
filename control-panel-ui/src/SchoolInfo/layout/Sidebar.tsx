@@ -1,9 +1,10 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 import ThemeToggle from '../ThemeToggle.tsx';
-import { useAuth } from '../../helpers/useAuth.ts';
+import { useAuth } from '../../helpers';
 import NavigationItemsGroup from '../../components/navigation/NavigationItemsGroup.tsx';
 import { adminNavItems, userNavItems } from '../../components/navigation/NavigationPathConfig.tsx';
+import {useWebsocketDisconnect} from "../../hooks/Wsclient/useWebsocketDisconnect.ts";
 
 type SidebarProps = {
     isOpen: boolean;
@@ -14,12 +15,13 @@ export default function Sidebar({ isOpen, closeSidebar }: SidebarProps) {
     const { pathname } = useLocation();
     const navigate = useNavigate();
     const { jwt, logout } = useAuth();
+    const { disconnectWebsocket } = useWebsocketDisconnect();
 
     const isAdmin = pathname.startsWith('/admin');
     const base = isAdmin ? '/admin' : '/school-info';
     const title = isAdmin ? 'Admin Panel' : 'School Portal';
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         logout();
         if(base == '/admin'){
             navigate(base + '-login', { replace: true });
@@ -27,6 +29,7 @@ export default function Sidebar({ isOpen, closeSidebar }: SidebarProps) {
         } else {
             navigate('/guest-login', { replace: true });
             setTimeout(() => navigate('/guest-login', { replace: true }), 0);
+            await disconnectWebsocket();
         }
         closeSidebar();
     };

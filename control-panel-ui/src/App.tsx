@@ -11,6 +11,7 @@ import LoginPageUser from "./components/login/user/LoginPageUser.tsx";
 import LoginPage from "./SchoolInfo/auth/LoginPage.tsx";
 import {useAtom} from "jotai/index";
 import {CheckUserLogged} from "./atoms/UserLogged.ts";
+
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const ws = import.meta.env.VITE_API_WS_SCHEMA;
 const wss =import.meta.env.VITE_API_WSS_SCHEMA;
